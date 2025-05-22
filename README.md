@@ -47,7 +47,7 @@ Before proceeding to the next steps, please ensure that the following packages a
 
 1. Set up the environment
 ```bash
-git clone https://github.com/bnb-chain/node-deploy.git
+unzip node-deploy.zip
 cd node-deploy
 python3 -m venv path/to/venv
 apt install python3.12-venv
@@ -61,24 +61,13 @@ unzip ./code/attack-1-code.zip
 cd attack-1-code && make geth
 ```
 
-4. Configure the cluster
-```
-  You can configure the cluster by modifying the following files:
-   - `config.toml`
-   - `genesis/genesis-template.json`
-   - `.env`
-```
-
-5. Start the script
+3. Start the script
 
 ```bash
 bash -x ./bsc_cluster.sh reset # will reset the cluster and start
-bash -x ./bsc_cluster.sh stop [vidx] # Stops the cluster
-bash -x ./bsc_cluster.sh start [vidx] # only start the cluster
-bash -x ./bsc_cluster.sh restart [vidx] # start the cluster after stopping it
 ```
 
-6. Start the monitoring script
+4. Start the monitoring script
 
 ```bash
 cd query && go run main.go --node=21
