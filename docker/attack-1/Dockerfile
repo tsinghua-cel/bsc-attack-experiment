@@ -1,5 +1,5 @@
 # Use Ubuntu 22.04 as base image
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # Set non-interactive mode for apt
 ENV DEBIAN_FRONTEND=noninteractive
@@ -29,10 +29,8 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 COPY .foundry /root/.foundry 
 ENV PATH="/root/.foundry/bin:${PATH}"
 
-# Install Poetry
-#RUN pip3 install poetry
-# use Tsinghua mirror
-RUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple poetry
+# Install Poetry (Ubuntu 24.04+ needs --break-system-packages)
+RUN pip3 install --break-system-packages -i https://pypi.tuna.tsinghua.edu.cn/simple poetry
 
 # Set workdir
 WORKDIR /app
@@ -58,7 +56,10 @@ RUN unzip /app/node-deploy.zip -d /app/ && \
     cd /app/node-deploy && \
     python3 -m venv /app/node-deploy/venv && \
     . /app/node-deploy/venv/bin/activate && \
-    pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+    pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt && \
+    . /app/node-deploy/venv/bin/activate && \
+    cd /app/node-deploy && \
+    bash -x ./bsc_cluster.sh prepare
 
 # Default command: start cluster and run monitoring script
-CMD bash -c 'cd /app/node-deploy && bash -x ./bsc_cluster.sh reset && cd /app/query && go run main.go --node=21'
+CMD bash -c 'cd /app/node-deploy && bash -x ./bsc_cluster.sh start-all && cd /app/query && go run main.go --node=21'
