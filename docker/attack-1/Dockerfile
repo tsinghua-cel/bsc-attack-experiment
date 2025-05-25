@@ -25,7 +25,7 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 # RUN curl -L https://foundry.paradigm.xyz | bash && \
 #     /root/.foundry/bin/foundryup
 # ENV PATH="/root/.foundry/bin:${PATH}"
-# too slow, use pre-installed foundry
+# too slow, can use pre-installed foundry
 COPY .foundry /root/.foundry 
 ENV PATH="/root/.foundry/bin:${PATH}"
 
@@ -40,12 +40,13 @@ COPY code/attack-1-code.zip /app/code/attack-1-code.zip
 # Copy node-deploy.zip
 COPY node-deploy.zip /app/node-deploy.zip
 # Copy query directory
+# can use pre-built query binary
 COPY query /app/query
 
 # Unzip attack-1-code.zip, build geth binary
 # RUN unzip /app/code/attack-1-code.zip -d /app/code/ && \
 #     cd /app/code/attack-1-code && make geth
-# use pre-built geth binary
+# can use pre-built geth binary
 COPY code/attack-1-code/build/bin/geth /app/code/attack-1-code/build/bin/geth
 
 # Unzip node-deploy.zip, move geth to node-deploy/bin, set up Python venv, install requirements, run cluster script
@@ -57,9 +58,10 @@ RUN unzip /app/node-deploy.zip -d /app/ && \
     python3 -m venv /app/node-deploy/venv && \
     . /app/node-deploy/venv/bin/activate && \
     pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt && \
-    . /app/node-deploy/venv/bin/activate && \
-    cd /app/node-deploy && \
+    . /app/node-deploy/venv/bin/activate 
+
+RUN cd /app/node-deploy && \
     bash -x ./bsc_cluster.sh prepare
 
 # Default command: start cluster and run monitoring script
-CMD bash -c 'cd /app/node-deploy && bash -x ./bsc_cluster.sh start-all && cd /app/query && go run main.go --node=21'
+CMD bash -c 'cd /app/node-deploy && bash -x ./bsc_cluster.sh start-all && cd /app/query && ./getblock --node=21'

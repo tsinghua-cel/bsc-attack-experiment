@@ -262,3 +262,13 @@ After the block height reaches 250, if the FinalizedBlock height continues to in
 490,486,490,true
 ...
 ```
+
+
+## Docker 后台运行与日志查看
+
+运行容器：
+```bash
+
+docker run -it --rm bsc-attack-1:latest 
+
+```
