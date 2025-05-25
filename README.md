@@ -269,6 +269,11 @@ After the block height reaches 250, if the FinalizedBlock height continues to in
 运行容器：
 ```bash
 
+
+docker run -it --rm \
+  -v /home/itcast/bsc/bsc-attack-experiment/query/21.txt:/app/query/21.txt \
+  bsc-attack-1:latest
+
 docker run -it --rm bsc-attack-1:latest 
 
 ```
