@@ -115,7 +115,7 @@ touch 2.txt && docker run -it --rm \
   erick785/bsc-attack-2:latest
 ```
 
-### attack 3(Bootnode mode)
+### attack 3 (Bootnode mode)
 ```bash
 touch 3.txt && docker run -it --rm \
   -v ./3.txt:/app/query/21.txt \
@@ -123,7 +123,7 @@ touch 3.txt && docker run -it --rm \
   erick785/bsc-attack-3-bootnode:latest
 ```
 
-### attack 3(Full connetion mode)
+### attack 3 (Full connetion mode)
 ```bash
 touch 3.txt && docker run -it --rm \
   -v ./3.txt:/app/query/21.txt \
