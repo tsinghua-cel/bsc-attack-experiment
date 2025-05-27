@@ -42,7 +42,7 @@ Before proceeding to the next steps, please ensure that the following packages a
 - poetry
 - jq
 
-  ## Quick Start
+  ## Start by Code
 
 
 1. Set up the environment
@@ -64,7 +64,15 @@ cd attack-1-code && make geth
 3. Start the script
 
 ```bash
+
+# attack-1 and attack-2
 bash -x ./bsc_cluster.sh reset # will reset the cluster and start
+
+
+# attack-3
+export DELAY_INTERVAL_MS=25 && bash -x ./bsc_cluster.sh reset # DELAY_INTERVAL_MS can 25，50.75
+
+
 ```
 
 4. Start the monitoring script
@@ -72,6 +80,38 @@ bash -x ./bsc_cluster.sh reset # will reset the cluster and start
 ```bash
 cd query && go run main.go --node=21
 ```
+
+## Start by Docker
+
+need docker 
+
+```bash
+
+# attack-1  
+
+touch 1.txt && docker run -it --rm \
+  -v ./1.txt:/app/query/21.txt \
+  erick785/bsc-attack-1:latest
+
+# attack-2
+touch 2.txt && docker run -it --rm \
+  -v ./2.txt:/app/query/21.txt \
+  erick785/bsc-attack-2:latest
+
+# attack-bootnode-3 ,DELAY_INTERVAL_MS can 25,50,75
+touch 3.txt && docker run -it --rm \
+  -v ./3.txt:/app/query/21.txt \
+  -e DELAY_INTERVAL_MS=25 \
+  erick785/bsc-attack-3-bootnode:latest
+
+# attack-staicnode-3 ,DELAY_INTERVAL_MS can 25,50,75
+touch 3.txt && docker run -it --rm \
+  -v ./3.txt:/app/query/21.txt \
+  -e DELAY_INTERVAL_MS=25 \
+  erick785/bsc-attack-3-staicnode:latest
+
+```
+
 
 ## Indicators of Experiment Success
 
@@ -264,16 +304,4 @@ After the block height reaches 250, if the FinalizedBlock height continues to in
 ```
 
 
-## Docker 后台运行与日志查看
 
-运行容器：
-```bash
-
-
-docker run -it --rm \
-  -v /home/itcast/bsc/bsc-attack-experiment/query/21.txt:/app/query/21.txt \
-  bsc-attack-1:latest
-
-docker run -it --rm bsc-attack-1:latest 
-
-```
