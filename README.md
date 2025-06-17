@@ -1,28 +1,33 @@
 # bsc-attack-experiment
 
-# bsc-experiment-program
+This repo provides the implementation and experimental results for the paper "[USENIX25] Does Finality Gadget Finalize Your Block? A Case Study of Binance Consensus".
 
-## Introduction
+This paper studies the consensus mechanism of BNB smart chain (BSC)---a top-ranked blockchain platform developed by Binance. Since mid 2023, BSC has integrated a fast finality (FF) mechanism into its system. The FF mechanism is borrowed from the friendly finality gadget (FFG) by Ethereum Casper. The idea is to allow validators to vote for blocks and then agree on their order. Such an approach shares some similarities with the consensus mechanism in Byzantine fault-tolerant (BFT) protocols (e.g., PBFT and HotStuff). BSC claims that its FF mechanism can finalize blocks in 
+O(1) time, simultaneously reducing latency and improving stability. In this paper, we demonstrate the FF mechanism of BSC is susceptible to attacks. In particular, we provide three different attacks, showing BSC fails to finalize blocks in constant time and may even simply fail to achieve liveness. We validate our results via extensive experimental analysis and meanwhile provide mitigation solutions.
+
+
+## A Quick Access to Our Results 
+
 | **Output Results (TXT)**               | **Chain Data (ZIP)**                              | **Description**                                                                 |
 |----------------------------------------|-------------------------------------------------|---------------------------------------------------------------------------------|
 | `attack-1-reward.txt`                  | `node-attack-1-reward.zip`                      | Reward details for Attack 1.                                                   |
-| `attack-1.txt`                         | `node-attack-1.zip`                             | Logs or details for Attack 1.                                                  |
+| `attack-1.txt`                         | `node-attack-1.zip`                             | Details and logs for Attack 1.                                                  |
 | `attack-2-reward.txt`                  | `node-attack-2-reward.zip`                      | Reward details for Attack 2.                                                   |
-| `attack-2.txt`                         | `node-attack-2.zip`                             | Logs or details for Attack 2.                                                  |
-| `attack-3-bootnode-25.txt`             | `node-attack-3-bootnode-25.zip`                 | Logs or details for Attack 3 with delay 25ms bootnode participation.                  |
-| `attack-3-bootnode-50-reward.txt`      | `node-attack-3-bootnode-50-reward.zip`          | Reward details for Attack 3 with delay 50ms bootnode participation.                   |
-| `attack-3-bootnode-50.txt`             | `node-attack-3-bootnode-50.zip`                 | Logs or details for Attack 3 with delay 50ms bootnode participation.                  |
-| `attack-3-bootnode-75.txt`             | `node-attack-3-bootnode-75.zip`                 | Logs or details for Attack 3 with delay 75ms bootnode participation.                  |
-| `attack-3-staticnode-25.txt`           | `node-attack-3-staticnode-25.zip`               | Logs or details for Attack 3 with delay 25ms staticnode participation.                |
-| `attack-3-staticnode-50-reward.txt`    | `node-attack-3-staticnode-50-reward.zip`        | Reward details for Attack 3 with delay 50ms staticnode participation.                 |
-| `attack-3-staticnode-50.txt`           | `node-attack-3-staticnode-50.zip`               | Logs or details for Attack 3 with delay 50ms staticnode participation.                |
-| `attack-3-staticnode-75.txt`           | `node-attack-3-staticnode-75.zip`               | Logs or details for Attack 3 delay 75ms staticnode participation.                |
-| `normal-reward.txt`                    | `node-normal-reward.zip`                        | Reward details for normal operation.                                           |
+| `attack-2.txt`                         | `node-attack-2.zip`                             | Details and logs for Attack 2.                                                  |
+| `attack-3-bootnode-25.txt`             | `node-attack-3-bootnode-25.zip`                 | Details and logs for Attack 3: using bootnode-based connection with a 25ms delay.                  |
+| `attack-3-bootnode-50-reward.txt`      | `node-attack-3-bootnode-50-reward.zip`          | Reward details for Attack 3: using bootnode-based connection with a 50ms delay.                   |
+| `attack-3-bootnode-50.txt`             | `node-attack-3-bootnode-50.zip`                 | Details and logs for Attack 3: using bootnode-based connection with a 50ms delay.                  |
+| `attack-3-bootnode-75.txt`             | `node-attack-3-bootnode-75.zip`                 | Details and logs for Attack 3: using bootnode-based connection with a 75ms delay.                  |
+| `attack-3-staticnode-25.txt`           | `node-attack-3-staticnode-25.zip`               | Details and logs for Attack 3: using full connection with a 25ms delay.                |
+| `attack-3-staticnode-50-reward.txt`    | `node-attack-3-staticnode-50-reward.zip`        | Reward details for Attack 3: using full connection with a 50ms delay.                 |
+| `attack-3-staticnode-50.txt`           | `node-attack-3-staticnode-50.zip`               | Details and logs for Attack 3: using full connection with a 50ms delay.                |
+| `attack-3-staticnode-75.txt`           | `node-attack-3-staticnode-75.zip`               | Details and logs for Attack 3: using full connection with a 75ms delay.                |
+| `normal-reward.txt`                    | `node-normal-reward.zip`                        | Reward details for benchmark.                                           |
 
 
 ## Attack Code Repository
 
-  bsc repository (based on v1.4.16):https://github.com/bnb-chain/bsc.git
+  Bsc repository (based on v1.4.16): https://github.com/bnb-chain/bsc/tree/v1.4.16
 
   - attck 1 code : ./code/attack-1-code.zip
   - attck 2 code : ./code/attack-2-code.zip
@@ -30,10 +35,11 @@
   - attck 3 code : ./code/attack-3-staicnode-code.zip
 
 
-  Nodes deployment scrip https://github.com/bnb-chain/node-deploy.git
+  Nodes deployment script: https://github.com/bnb-chain/node-deploy.git
 
-  ## Installation
+## Installation
 Before proceeding to the next steps, please ensure that the following packages and softwares are well installed in your local machine: 
+- Ubuntu 20.04/22.04
 - nodejs: 18.20.2 
 - npm: 6.14.6
 - go: 1.18+
@@ -41,113 +47,124 @@ Before proceeding to the next steps, please ensure that the following packages a
 - python3 3.12+
 - poetry
 - jq
+- docker
 
-  ## Start by Code
+## Start
 
-
-1. Set up the environment
+1. Unzip and enter the project directory
 ```bash
 unzip node-deploy.zip
 cd node-deploy
+```
+2. Create and activate a virtual environment
+```
+# Create the virtual environment (if the venv package is not installed)
 python3 -m venv path/to/venv
+
+# Create virtual environments
 apt install python3.12-venv
+
+# Activate the virtual environment
 source path/to/venv/bin/activate
+```
+3. Install dependencies
+```
 pip3 install -r requirements.txt
 ```
 
-2. compile the geth binary, and place it in the node-deploy/bin/ folder
+4. compile the geth binary, and place it in the node-deploy/bin/ folder
 ```bash
 unzip ./code/attack-1-code.zip 
 cd attack-1-code && make geth
 ```
 
-3. Start the script
+## Launch attack simulation
+
+Description of attack types:
+
+- Attack 1: Basic Network Attack Simulation
+- Attack 2: Enhanced Network Attack Simulation
+- Attack 3: Latency-based network attack simulation (supports both bootnode and full connetion modes)
+
+1. Start attack
 
 ```bash
-
-# attack-1 and attack-2
+# attack 1 and attack 2
 bash -x ./bsc_cluster.sh reset # will reset the cluster and start
 
-
 # attack-3
-export DELAY_INTERVAL_MS=25 && bash -x ./bsc_cluster.sh reset # DELAY_INTERVAL_MS can 25，50.75
-
-
+# Set delay to 25ms (DELAY_INTERVAL_MS can be adjusted to 25, 50, 75)
+export DELAY_INTERVAL_MS=25 && bash -x ./bsc_cluster.sh reset
 ```
 
-4. Start the monitoring script
+2. Start the monitoring script
 
 ```bash
 cd query && go run main.go --node=21
 ```
+> Notice: The monitoring data will be exported to the query/21.txt file.
 
 ## Start by Docker
 
-need docker 
+Preconditions:
+- Installed Docker Engine
 
+### attack 1  
 ```bash
-
-# attack-1  
-
 touch 1.txt && docker run -it --rm \
   -v ./1.txt:/app/query/21.txt \
   erick785/bsc-attack-1:latest
-
-# attack-2
+```
+### attack 2
+```bash
 touch 2.txt && docker run -it --rm \
   -v ./2.txt:/app/query/21.txt \
   erick785/bsc-attack-2:latest
+```
 
-# attack-bootnode-3 ,DELAY_INTERVAL_MS can 25,50,75
+### attack 3 (Bootnode mode)
+```bash
 touch 3.txt && docker run -it --rm \
   -v ./3.txt:/app/query/21.txt \
   -e DELAY_INTERVAL_MS=25 \
   erick785/bsc-attack-3-bootnode:latest
+```
 
-# attack-staicnode-3 ,DELAY_INTERVAL_MS can 25,50,75
+### attack 3 (Full connetion mode)
+```bash
 touch 3.txt && docker run -it --rm \
   -v ./3.txt:/app/query/21.txt \
   -e DELAY_INTERVAL_MS=25 \
   erick785/bsc-attack-3-staicnode:latest
-
 ```
 
+## Description of indicators of experimental success
 
-## Indicators of Experiment Success
+Data field definitions
+| **Field Order**               | **Field Name**                              | **Description**                                                                 |
+|----------------------------------------|-------------------------------------------------|---------------------------------------------------------------------------------|
+| 1                  | The latest block height                      | The number of the latest block that has been generated by the current node (`LatestBlock`).    |
+| 2                  | Finalized block height                      | Block number that has been finalized (`FinalizedBlock`).    |
+| 3                  | Same as 1                      | Same as 1.    |
+| 4                  | Attestation of block header                      | `true` means that the block received a vote attestation, `false` means that it did not.    |
 
-After running the monitoring script, the following logs indicate a successful startup:
-```
-0,0,0,false
-1,0,1,false
-2,0,2,false
-3,0,3,false
-4,0,4,false
-5,0,5,false
-6,0,6,false
-7,0,7,false
-8,0,8,false
-9,0,9,false
-10,0,10,false
-11,0,11,false
-12,0,12,false
-13,0,13,false
-...
-```
-The first and third numbers represent the latest block height, the second represents the FinalizedBlock height, and the fourth indicates whether there is a vote attestation in the block header.
-All experiments start at block height 250.
+ > \* **All attacks start at block height 250** *
 
-1. attack-1
+## Criteria for determining success for each type of attack
+### attack 1
 
-After the block height reaches 250, if the FinalizedBlock height continues to increase, the experiment is considered successful.
+Success Conditions:
+- When the block height ≥ 250, the FinalizedBlock height continues to grow, indicating that the _Fast Finality_(FF) mechanism advances normally despite the attack.log
 
+logs:
 ```
 ...
 247,245,247,true
 248,246,248,true
 249,247,249,true
-250,248,250,true
-251,249,251,true
-252,249,252,false
+250,248,250,true # Latest block height is 250. Starting attack.
+251,249,251,true # Finalized block height growth to 249
+252,249,252,false # Finalize the block to stop growing
 253,249,253,false
 254,249,254,true
 255,249,255,false
@@ -165,7 +182,7 @@ After the block height reaches 250, if the FinalizedBlock height continues to in
 267,249,267,false
 268,249,268,false
 269,249,269,true
-270,268,270,true
+270,268,270,true # Finalized blocks catch up to 268, indicating a gradual recovery of consensus 
 271,269,271,true
 272,270,272,true
 273,270,273,false
@@ -187,16 +204,19 @@ After the block height reaches 250, if the FinalizedBlock height continues to in
 ...
 ```
 
-2. attack-2
+### attack 2
 
-When the block height is above 250, if the FinalizedBlock height remains constant, the experiment is considered successful.
+Success Conditions:
+- When the block height ≥ 250, the FinalizedBlock always stops at the pre-attack level (e.g., 249), indicating a complete failure of the FF mechanism.
+
+logs:
 ```
 ...
 248,246,248,true
 249,247,249,true
-250,248,250,true
-251,249,251,true
-252,249,252,false
+250,248,250,true # The last normal finalized block height before the attack was 248
+251,249,251,true # After the attack started, the finalized block was briefly boosted to 249
+252,249,252,false # Subsequent blocks finalize block height stagnation at 249
 253,249,253,false
 254,249,254,false
 255,249,255,false
@@ -235,10 +255,12 @@ When the block height is above 250, if the FinalizedBlock height remains constan
 
 ```
 
-3. attack-3
+### attack-3
 
-After the block height reaches 250, if the FinalizedBlock height continues to increase, the experiment is considered successful。
+Success Conditions:
+- The delayed growth of the FinalizedBlock height when the block height is ≥ 250 indicates that the attack affects the consensus through the delay strategy but does not completely destroy it.
 
+logs:
 ```
 ...
 432,429,432,false
@@ -259,7 +281,7 @@ After the block height reaches 250, if the FinalizedBlock height continues to in
 447,429,447,false
 448,429,448,false
 449,429,449,false
-450,429,450,false
+450,429,450,false # At block 450, the finalized block height remains 429 (21 blocks delayed)  
 451,429,451,false
 452,429,452,false
 453,429,453,false
@@ -285,7 +307,7 @@ After the block height reaches 250, if the FinalizedBlock height continues to in
 473,429,473,true
 474,429,474,false
 475,429,475,true
-476,474,476,true
+476,474,476,true # After a delay, the `finalized block` starts catching up (`finalized block` height is the height of the `latest block` - 2) 
 477,474,477,false
 478,474,478,true
 479,477,479,true
@@ -302,6 +324,5 @@ After the block height reaches 250, if the FinalizedBlock height continues to in
 490,486,490,true
 ...
 ```
-
-
-
+## Contribution
+- For help, please submit an issue to the project repository.
