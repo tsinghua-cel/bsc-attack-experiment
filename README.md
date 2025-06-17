@@ -1,6 +1,17 @@
 # bsc-attack-experiment
+
 This repository is an expanded version of https://zenodo.org/records/15552871
 ## Introduction
+=======
+
+This repo provides the implementation and experimental results for the paper "[USENIX25] Does Finality Gadget Finalize Your Block? A Case Study of Binance Consensus", and it is an expanded version of https://zenodo.org/records/15552871.
+
+This paper studies the consensus mechanism of BNB smart chain (BSC)---a top-ranked blockchain platform developed by Binance. Since mid 2023, BSC has integrated a fast finality (FF) mechanism into its system. The FF mechanism is borrowed from the friendly finality gadget (FFG) by Ethereum Casper. The idea is to allow validators to vote for blocks and then agree on their order. Such an approach shares some similarities with the consensus mechanism in Byzantine fault-tolerant (BFT) protocols (e.g., PBFT and HotStuff). BSC claims that its FF mechanism can finalize blocks in 
+O(1) time, simultaneously reducing latency and improving stability. In this paper, we demonstrate the FF mechanism of BSC is susceptible to attacks. In particular, we provide three different attacks, showing BSC fails to finalize blocks in constant time and may even simply fail to achieve liveness. We validate our results via extensive experimental analysis and meanwhile provide mitigation solutions.
+
+
+## A Quick Access to Our Results 
+
 | **Output Results (TXT)**               | **Chain Data (ZIP)**                              | **Description**                                                                 |
 |----------------------------------------|-------------------------------------------------|---------------------------------------------------------------------------------|
 | `attack-1-reward.txt`                  | `node-attack-1-reward.zip`                      | Reward details for Attack 1.                                                   |
