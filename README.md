@@ -1,5 +1,5 @@
 # bsc-attack-experiment
-
+This repository is an expanded version of https://zenodo.org/records/15552871
 ## Introduction
 | **Output Results (TXT)**               | **Chain Data (ZIP)**                              | **Description**                                                                 |
 |----------------------------------------|-------------------------------------------------|---------------------------------------------------------------------------------|
@@ -62,9 +62,9 @@ source path/to/venv/bin/activate
 ```
 3. Install dependencies
 ```
-pip3 install -r requirements.txt
 chmod +x install-dev.sh
 sudo ./install-dev.sh
+pip3 install -r requirements.txt
 ```
 
 4. compile the geth binary, and place it in the node-deploy/bin/ folder
