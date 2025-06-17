@@ -1,8 +1,6 @@
 # bsc-attack-experiment
 
-This repository is an expanded version of https://zenodo.org/records/15552871
 ## Introduction
-=======
 
 This repo provides the implementation and experimental results for the paper "[USENIX25] Does Finality Gadget Finalize Your Block? A Case Study of Binance Consensus", and it is an expanded version of https://zenodo.org/records/15552871.
 
