@@ -219,9 +219,8 @@ func (r *Resp) String() string {
 }
 
 func (r *Resp) WString() string {
-	return fmt.Sprintf("%v,%v,%v,%v",
-		r.LatestBlock.Number.ToInt(), r.FinalizedBlock.Number.ToInt(),
-		r.LatestBlock.Number.ToInt(), getVoteAttestationFromHeader(r.LatestBlock.ExtraData, r.LatestBlock.Number.ToInt().Uint64(), 20))
+	return fmt.Sprintf("%v,%v,%v",
+		r.LatestBlock.Number.ToInt(), r.FinalizedBlock.Number.ToInt(), getVoteAttestationFromHeader(r.LatestBlock.ExtraData, r.LatestBlock.Number.ToInt().Uint64(), 20))
 }
 
 const (
@@ -296,7 +295,7 @@ func inturnValidator(number uint64) common.Address {
 func (b *BlockScanner) WriteBlockToFile(resp *Resp) {
 	// write to file
 
-	fmt.Println(resp.String())
+	fmt.Println(resp.WString())
 
 	fileName := fmt.Sprintf("%s.txt", b.nodeID)
 
