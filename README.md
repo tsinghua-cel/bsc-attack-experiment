@@ -34,7 +34,7 @@ O(1) time, simultaneously reducing latency and improving stability. In this pape
   - attack 1 code : ./code/attack-1-code.zip
   - attack 2 code : ./code/attack-2-code.zip
   - attack 3 code : ./code/attack-3-bootnode-code.zip
-  - attack 3 code : ./code/attack-3-staicnode-code.zip
+  - attack 3 code : ./code/attack-3-staticnode-code.zip
 
 
   Nodes deployment script: https://github.com/bnb-chain/node-deploy.git
@@ -141,7 +141,7 @@ touch 3.txt && docker run -it --rm \
 touch 3.txt && docker run -it --rm \
   -v ./3.txt:/app/query/21.txt \
   -e DELAY_INTERVAL_MS=25 \
-  erick785/bsc-attack-3-staicnode:latest
+  erick785/bsc-attack-3-staticnode:latest
 ```
 
 ## Description of indicators of experimental success
