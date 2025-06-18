@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/big"
 	"os"
 	"sort"
 	"strconv"
@@ -281,6 +282,10 @@ func (b *BlockScanner) ScanLoop() {
 			}
 
 			b.WriteBlockToFile(resp)
+
+			if latestblock.Number.ToInt().Cmp(big.NewInt(2000)) >= 0 {
+				os.Exit(0)
+			}
 		}
 	}
 
