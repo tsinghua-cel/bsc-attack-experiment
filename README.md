@@ -226,11 +226,7 @@ Demonstrate that FF can be stalled for an extended period.
     
 -   Node deployment script: [https://github.com/bnb-chain/node-deploy](https://github.com/bnb-chain/node-deploy)
 
-## Contribution
-- For questions or bug reports, please open a GitHub issue in this repository.
-
 ## Appendix
-
 This section outlines the complete manual installation process, including environment setup, dependency installation, and attack execution using raw scripts and source code.
 
 > ⚠️ **Before you begin**, please ensure the following software and system packages are installed on your local machine:
@@ -294,3 +290,6 @@ export DELAY_INTERVAL_MS=25 && bash -x ./bsc_cluster.sh reset
 cd query && go run main.go --node=21
 ```
 > Notice: The monitoring data will be exported to the query/21.txt file.
+
+## Contribution
+- For questions or bug reports, please open a GitHub issue in this repository.
