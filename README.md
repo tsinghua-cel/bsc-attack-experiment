@@ -2,13 +2,17 @@
 
 ## Introduction
 
-This repo provides the implementation and experimental results for the paper "[USENIX25] Does Finality Gadget Finalize Your Block? A Case Study of Binance Consensus", and it is an expanded version of https://zenodo.org/records/15552871.
+This repository contains the implementation and experimental artifacts for the paper:  
+**"[USENIX25] Does Finality Gadget Finalize Your Block? A Case Study of Binance Consensus"**. 
 
-This paper studies the consensus mechanism of BNB smart chain (BSC)---a top-ranked blockchain platform developed by Binance. Since mid 2023, BSC has integrated a fast finality (FF) mechanism into its system. The FF mechanism is borrowed from the friendly finality gadget (FFG) by Ethereum Casper. The idea is to allow validators to vote for blocks and then agree on their order. Such an approach shares some similarities with the consensus mechanism in Byzantine fault-tolerant (BFT) protocols (e.g., PBFT and HotStuff). BSC claims that its FF mechanism can finalize blocks in 
-O(1) time, simultaneously reducing latency and improving stability. In this paper, we demonstrate the FF mechanism of BSC is susceptible to attacks. In particular, we provide three different attacks, showing BSC fails to finalize blocks in constant time and may even simply fail to achieve liveness. We validate our results via extensive experimental analysis and meanwhile provide mitigation solutions.
+The paper analyzes the consensus protocol of BNB Smart Chain (BSC). Since mid-2023, BSC has integrated a *Fast Finality (FF)* mechanism, where validators vote to finalize block order. BSC claims that its FF mechanism can finalize blocks in O(1) time, simultaneously reducing latency and improving stability. The paper presents three attacks, showing BSC fails to finalize blocks in constant time and may even simply fail to achieve liveness
 
+This repository is intended to support both **functionality** and **reproducibility** evaluation, enabling reviewers and researchers to replicate all key experiments and validate the claims presented in the paper.
 
-## A Quick Access to Our Results 
+This repository provides an extended and actively maintained version of our artifact archived at [Zenodo](https://zenodo.org/records/15552871).
+
+## Quick Access 
+All raw data and logs are available in the `/test-data/` directory.
 
 | **Output Results (TXT)**               | **Chain Data (ZIP)**                              | **Description**                                                                 |
 |----------------------------------------|-------------------------------------------------|---------------------------------------------------------------------------------|
@@ -26,20 +30,44 @@ O(1) time, simultaneously reducing latency and improving stability. In this pape
 | `attack-3-staticnode-75.txt`           | `node-attack-3-staticnode-75.zip`               | Details and logs for Attack 3: using full connection with a 75ms delay.                |
 | `normal-reward.txt`                    | `node-normal-reward.zip`                        | Reward details for benchmark.                                           |
 
+## 📦Recommended Setup: Docker (Minimal Configuration)
+We strongly recommend using our prebuilt Docker images to reproduce all results reliably and efficiently.
 
-## Attack Code Repository
+### Prerequisites
 
-  Bsc repository (based on v1.4.16): https://github.com/bnb-chain/bsc/tree/v1.4.16
+- Docker Engine ≥ **v20.10**
+- Memory: **16 GB+** recommended
 
-  - attack 1 code : ./code/attack-1-code.zip
-  - attack 2 code : ./code/attack-2-code.zip
-  - attack 3 code : ./code/attack-3-bootnode-code.zip
-  - attack 3 code : ./code/attack-3-staticnode-code.zip
+### Running attack 1 
+```bash
+touch 1.txt && docker run -it --rm \
+  -v ./1.txt:/app/query/21.txt \
+  erick785/bsc-attack-1:latest
+```
+### Running attack 2
+```bash
+touch 2.txt && docker run -it --rm \
+  -v ./2.txt:/app/query/21.txt \
+  erick785/bsc-attack-2:latest
+```
 
+### Running attack 3 (bootnode connection mode)
+```bash
+touch 3.1.txt && docker run -it --rm \
+  -v ./3.1.txt:/app/query/21.txt \
+  -e DELAY_INTERVAL_MS=25 \
+  erick785/bsc-attack-3-bootnode:latest
+```
 
-  Nodes deployment script: https://github.com/bnb-chain/node-deploy.git
+### Running attack 3 (full connection mode)
+```bash
+touch 3.2.txt && docker run -it --rm \
+  -v ./3.2.txt:/app/query/21.txt \
+  -e DELAY_INTERVAL_MS=25 \
+  erick785/bsc-attack-3-staicnode:latest
+```
 
-## Installation
+## 🛠️ Optional: Manual Build & Execution
 Before proceeding to the next step, please ensure that the following packages and software are well installed in your local computer: 
 - Ubuntu 20.04/22.04
 - nodejs: 18.20.2 
@@ -51,8 +79,7 @@ Before proceeding to the next step, please ensure that the following packages an
 - poety: 2.0.0
 - jq: 1.7
 
-## Start
-
+### Setup steps
 1. Unzip and enter the project directory
 ```bash
 unzip node-deploy.zip
@@ -83,15 +110,7 @@ cd attack-1-code && make geth
 unzip node-deploy.zip
 mv attack-1-code/build/bin/geth node-deploy/bin/geth
 ```
-
-## Launch attack simulation
-
-Description of attack types:
-
-- attack 1: Basic network attack simulation
-- attack 2: Enhanced network attack simulation
-- attack 3: The latency-based network attack simulation supports both bootnode and full connection modes
-
+### Launching attack simulation
 1. Start attack
 
 ```bash
@@ -110,41 +129,9 @@ cd query && go run main.go --node=21
 ```
 > Notice: The monitoring data will be exported to the query/21.txt file.
 
-## Start by Docker
+##  Attack Success Criteria
 
-Preconditions:
-- Installed Docker Engine
-
-### attack 1  
-```bash
-touch 1.txt && docker run -it --rm \
-  -v ./1.txt:/app/query/21.txt \
-  erick785/bsc-attack-1:latest
-```
-### attack 2
-```bash
-touch 2.txt && docker run -it --rm \
-  -v ./2.txt:/app/query/21.txt \
-  erick785/bsc-attack-2:latest
-```
-
-### attack 3 (Bootnode connection mode)
-```bash
-touch 3.txt && docker run -it --rm \
-  -v ./3.txt:/app/query/21.txt \
-  -e DELAY_INTERVAL_MS=25 \
-  erick785/bsc-attack-3-bootnode:latest
-```
-
-### attack 3 (Full connection mode)
-```bash
-touch 3.txt && docker run -it --rm \
-  -v ./3.txt:/app/query/21.txt \
-  -e DELAY_INTERVAL_MS=25 \
-  erick785/bsc-attack-3-staticnode:latest
-```
-
-## Description of indicators of experimental success
+Each line in the output file (e.g., `1.txt`, `2.txt`, `3.1.txt`, etc.) is a comma-separated triple: (LatestBlockHeight),(FinalizedBlockHeight),(Attested).
 
 Data field definitions
 | **Field Order**               | **Field Name**                              | **Description**                                                                 |
@@ -153,22 +140,28 @@ Data field definitions
 | 2                  | Finalized block height                      | Block number that has been finalized (`FinalizedBlock`).    |
 | 3                  | Attestation of block header                      | `true` means that the block received a vote attestation, `false` means that it did not.    |
 
- > \* **All attacks start at block height 250** *
+ > \* All attacks are triggered at block height **250** unless otherwise noted.
 
-## Criteria for successful implementation of each type of attack
-### attack 1
 
-Success Conditions:
-- When the block height ≥ 250, the FinalizedBlock height continues to grow, indicating that the _Fast Finality_(FF) mechanism advances normally despite the attack.log
+### For attack 1
 
-logs:
+**Objective:**  
+Demonstrate that BSC’s FF mechanism becomes sluggish under attack, slowing finalization but not entirely failing.
+
+**Success indicators:**
+-   Before slot 250 (From 210-250): Finalized block always lags 2 blocks behind the latest block (normal behavior).
+-   After slot 250: Finalized block height stops increasing for multiple slots.
+-   Eventually: Finalization resumes after a long stall.
+    
+**Sample pattern:**
+
 ```
 ...
 247,245,true
 248,246,true
 249,247,true
 250,248,true # Latest block height is 250. Starting attack.
-251,248,false # Finalize the block to stop growing
+251,248,false # Finalization stops growing
 252,248,false
 253,248,false
 ...
@@ -190,12 +183,18 @@ logs:
 ...
 ```
 
-### attack 2
+###  For attack 2
 
-Success Conditions:
-- When the block height ≥ 250, the FinalizedBlock always stops at the pre-attack level (e.g., 248), indicating a complete failure of the FF mechanism.
 
-logs:
+**Objective:**  
+Show that the finalization process halts completely after attack launch.
+
+**Success Indicators:**
+
+-   After slot 250: Finalized block height remains **frozen** at its pre-attack value (e.g., 248).
+-   No future blocks reach finality during the remainder of the test.   
+
+**Sample Pattern:**
 ```
 ...
 248,246,true
@@ -226,12 +225,19 @@ logs:
 
 ```
 
-### attack-3
+**Note:** This experiment is probabilistic. The exact data may vary across runs. However, the observed trend remains consistent: before the attack is launched, the difference between the latest block height and the finalized block height consistently stays at 2(e.g., [247,245], [248, 246], [249, 247]..). After initiating the attack at slot 250, this gap begins to widen. The finality of blocks no longer progresses in step with the increasing latest block height. 
 
-Success Conditions:
-- The delayed growth of the FinalizedBlock height when the block height is ≥ 250 indicates that the attack affects the consensus through the delay strategy but does not completely destroy it.
+###  For attack 3
 
-logs:
+**Objective:**  
+Demonstrate that FF can be stalled for an extended period.
+
+**Success Indicators (for each delay setting):**
+
+-   After attack start: Finalized block height stops increasing while the latest block keeps advancing.
+-   Eventually: Finalized block resumes increasing but with a noticeable delay.
+    
+**Sample Pattern:**
 ```
 ...
 438,429,false
@@ -289,5 +295,18 @@ logs:
 490,486,true
 ...
 ```
+**Note:** This experiment is probabilistic. The exact data may vary from run to run. However, the observed trend remains consistent: After launching attack-III, the finalized blocks no longer increase in synchronization with the latest blocks, but rather increase in a delayed manner.
+
+## Source Code
+
+-   BSC base (v1.4.16): [https://github.com/bnb-chain/bsc/tree/v1.4.16](https://github.com/bnb-chain/bsc/tree/v1.4.16)
+    
+-   Node deployment script: [https://github.com/bnb-chain/node-deploy](https://github.com/bnb-chain/node-deploy)
+
+  - attack 1 code : ./code/attack-1-code.zip
+  - attack 2 code : ./code/attack-2-code.zip
+  - attack 3 code : ./code/attack-3-bootnode-code.zip
+  - attack 3 code : ./code/attack-3-staicnode-code.zip
+
 ## Contribution
-- For help, please submit an issue to the project repository.
+- For questions or bug reports, please open a GitHub issue in this repository.
