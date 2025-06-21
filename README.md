@@ -35,7 +35,7 @@ We strongly recommend using our prebuilt Docker images to reproduce all results 
 
 ### Prerequisites
 
-- Docker Engine ≥ **v20.10**
+- Docker Engine ≥ **v27.5.1**
 - Memory: **16 GB+** recommended
 
 ### Running attack 1 
