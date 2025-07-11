@@ -316,9 +316,9 @@ mv attack-1-code/build/bin/geth node-deploy/bin/geth
 bash -x ./bsc_cluster.sh reset # will reset the cluster and start
 ```
 
-We recommend running each attack in a clean and isolated environment to ensure independent evaluation. We do not recommend run different attacks in parallel under the same environment.
+We recommend running each attack in a clean and isolated environment to ensure independent evaluation. We do not recommend running different attacks in parallel under the same environment.
 
-Make ensure you have re-compiled the geth binary for following attacks
+Please recompile the corresponding binary before running the following attacks.
 
 2. Start attack 2
 
