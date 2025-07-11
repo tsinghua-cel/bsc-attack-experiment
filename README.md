@@ -236,6 +236,12 @@ Demonstrate that FF can be stalled for an extended period.
 
 **Note:** This experiment is probabilistic. The exact data may vary from run to run. However, the observed trend remains consistent: After launching attack 3, the finalized blocks no longer increase in synchronization with the latest blocks, but rather increase in a delayed manner.
 
+### Count the number of '#Blocks' and '_FR_'
+
+```bash
+python count_FR.py "attack-1.txt" --min 251 --max 2251  # "attack-1.txt" is the name of the output file to be calculated, "--min" and "--max" are the upper and lower limits of the calculated height.
+```
+
 ## 💻 Source Code
 
 - BSC base (v1.4.16): [https://github.com/bnb-chain/bsc/tree/v1.4.16](https://github.com/bnb-chain/bsc/tree/v1.4.16)
