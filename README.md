@@ -309,16 +309,32 @@ mv attack-1-code/build/bin/geth node-deploy/bin/geth
 
 ### Launching attack simulation
 
-1. Start attack
+1. Start attack 1
 
 ```bash
-# attack 1 and attack 2
+# attack 1 
 bash -x ./bsc_cluster.sh reset # will reset the cluster and start
+```
 
+We recommend running each attack in a clean and isolated environment to ensure independent evaluation. We do not recommend run different attacks in parallel under the same environment.
+
+Make ensure you have re-compiled the geth binary for following attacks
+
+2. Start attack 2
+
+```bash
+# attack 2
+bash -x ./bsc_cluster.sh reset # will reset the cluster and start
+```
+
+2. Start attack 3
+
+```bash
 # attack 3
 # Set delay to 25ms (DELAY_INTERVAL_MS can be adjusted to 25, 50, 75)
 export DELAY_INTERVAL_MS=25 && bash -x ./bsc_cluster.sh reset
 ```
+
 
 2. Start the monitoring script
 
@@ -407,4 +423,5 @@ touch 3.2.txt && docker run -it --rm -v ./3.2.txt:/app/query/21.txt -e DELAY_INT
 ## Contribution
 
 - For questions or bug reports, please open a GitHub issue in this repository.
-  
+
+
